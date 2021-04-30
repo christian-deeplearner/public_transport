@@ -39,10 +39,13 @@ class Line:
             if prev_station is not None:
                 prev_station.handle_departure(prev_dir)
             else:
-                logger.debug("unable to handle previous station due to missing station")
+                logger.debug(
+                    "unable to handle previous station due to missing station"
+                    )
         else:
             logger.debug(
-                "unable to handle previous station due to missing previous info"
+                "unable to handle previous station due" +
+                "to missing previous info"
             )
 
         station_id = value.get("station_id")
@@ -51,7 +54,9 @@ class Line:
             logger.debug("unable to handle message due to missing station")
             return
         station.handle_arrival(
-            value.get("direction"), value.get("train_id"), value.get("train_status")
+            value.get("direction"),
+            value.get("train_id"),
+            value.get("train_status")
         )
 
     def process_message(self, message):
@@ -74,5 +79,6 @@ class Line:
             station.process_message(json_data)
         else:
             logger.debug(
-                "unable to find handler for message from topic %s", message.topic
+                "unable to find handler for message from topic %s",
+                message.topic
             )

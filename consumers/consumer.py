@@ -1,13 +1,10 @@
 """Defines core consumer functionality"""
 import logging
 
-import confluent_kafka
 from confluent_kafka import Consumer, OFFSET_BEGINNING
 from confluent_kafka.avro import AvroConsumer
 from confluent_kafka.avro.serializer import SerializerError
 from tornado import gen
-
-from models import Lines, Weather
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +37,9 @@ class KafkaConsumer:
         }
 
         if is_avro is True:
-            self.broker_properties["schema.registry.url"] = self.SCHEMA_REGISTRY_URL
+            self.broker_properties["schema.registry.url"] = (
+                self.SCHEMA_REGISTRY_URL
+            )
             self.consumer = AvroConsumer(self.broker_properties)
         else:
             self.consumer = Consumer(self.broker_properties)
@@ -65,12 +64,17 @@ class KafkaConsumer:
             await gen.sleep(self.sleep_secs)
 
     def _consume(self):
-        """Polls for a message. Returns 1 if a message was received, 0 otherwise"""
+        """Polls for a message.
+
+        Returns 1 if a message was received, 0 otherwise
+        """
         while True:
             try:
                 msg = self.consumer.poll(1.0)
             except SerializerError as e:
-                logger.error("Message deserialization failed for {}: {}".format(msg, e))
+                logger.error(
+                    "Message deserialization failed for {}: {}".format(msg, e)
+                    )
                 return 0
 
             if msg is None:
@@ -83,16 +87,6 @@ class KafkaConsumer:
             self.message_handler(msg)
             return 1
 
-
     def close(self):
         """Cleans up any open kafka consumers"""
         self.consumer.close()
-
-if __name__ == "__main__":
-    weather_model = Weather()
-
-    consumer = KafkaConsumer(
-        "(\w*|\.)*weather(.(\w*|\.))*",
-        weather_model.process_message,
-        offset_earliest=True,
-    )

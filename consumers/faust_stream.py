@@ -30,7 +30,12 @@ class TransformedStation(faust.Record):
     order: int
     line: str
 
-app = faust.App("org.cta.chicago.stations.stream", broker="kafka://localhost:9092", store="memory://")
+
+app = faust.App(
+    "org.cta.chicago.stations.stream",
+    broker="kafka://localhost:9092",
+    store="memory://"
+)
 topic = app.topic("connect-stations", value_type=Station)
 out_topic = app.topic("org.cta.chicago.stations.table.v1", partitions=1)
 table = app.Table(
@@ -39,6 +44,7 @@ table = app.Table(
    partitions=1,
    changelog_topic=out_topic,
 )
+
 
 @app.agent(topic)
 async def process(stations):
@@ -61,7 +67,10 @@ async def process(stations):
         )
 
         table[station.station_id] = transformed_statation
-        logger.info(f'Station {station.station_id}: {json.dumps(asdict(transformed_statation), indent=2)}')
+        logger.info(
+            f'Station {station.station_id}: ' +
+            f'{json.dumps(asdict(transformed_statation), indent=2)}'
+        )
 
 if __name__ == "__main__":
     app.main()
