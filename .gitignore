@@ -1,0 +1,12 @@
+/venv
+*/venv/
+/tmp
+/static
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+/pycache/*
+*.py[cod]
+
+.DS_Store
+.vscode
