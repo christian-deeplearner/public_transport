@@ -40,7 +40,7 @@ def configure_connector():
                "mode": "incrementing",
                "incrementing.column.name": "stop_id",
                "topic.prefix": "connect-",
-               "poll.interval.ms": "600000", # every 10 minutes
+               "poll.interval.ms": "600000",  # every 10 minutes
            }
        }),
     )
