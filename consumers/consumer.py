@@ -31,9 +31,12 @@ class KafkaConsumer:
         self.consume_timeout = consume_timeout
         self.offset_earliest = offset_earliest
 
+        offset_reset = "earliest" if offset_earliest else "latest"
+
         self.broker_properties = {
             "bootstrap.servers": self.BROKER_URL,
-            "group.id": "org.cta.consumer"
+            "group.id": "org.cta.consumer",
+            "auto.offset.reset": offset_reset
         }
 
         if is_avro is True:

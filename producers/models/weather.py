@@ -94,7 +94,3 @@ class Weather(Producer):
             )
 
         logger.debug(f"Sent weather data to REST Proxy {json.dumps(resp.json(), indent=2)}")
-
-if __name__ == "__main__":
-    weather = Weather(4)
-    weather.run(4)
