@@ -21,8 +21,7 @@
     },
     {
       "name": "train_status",
-      "type": "enum",
-      "symbols" : ["out_of_service", "in_service", "broken_down"]
+      "type": "string"
     },
     {
       "name": "prev_station_id",
